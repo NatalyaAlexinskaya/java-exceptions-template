@@ -1,6 +1,9 @@
 package com.epam.izh.rd.online.service;
 
 import com.epam.izh.rd.online.entity.User;
+import com.epam.izh.rd.online.exception.NotAccessException;
+import com.epam.izh.rd.online.exception.SimplePasswordException;
+import com.epam.izh.rd.online.exception.UserAlreadyRegisteredException;
 import com.epam.izh.rd.online.repository.IUserRepository;
 import com.epam.izh.rd.online.repository.UserRepository;
 
@@ -30,11 +33,18 @@ public class UserService implements IUserService {
      * @param user - даныне регистрирующегося пользователя
      */
     @Override
-    public User register(User user) {
+    public User register(User user) throws UserAlreadyRegisteredException, SimplePasswordException {
 
         //
         // Здесь необходимо реализовать перечисленные выше проверки
         //
+        if (user.getLogin() == null || user.getLogin().equals("") || user.getPassword() == null || user.getPassword().equals("")) {
+            throw new IllegalArgumentException("Ошибка в заполнении полей");
+        } else if (userRepository.findByLogin(user.getLogin()) != null) {
+            throw new UserAlreadyRegisteredException("Пользователь с логином " + user.getLogin() + " зарегистрирован");
+        } else if (user.getPassword().matches("\\d+")) {
+            throw new SimplePasswordException("Пароль не соответствует требованиям безопасности");
+        }
 
         // Если все проверки успешно пройдены, сохраняем пользователя в базу
         return userRepository.save(user);
@@ -58,14 +68,14 @@ public class UserService implements IUserService {
      *
      * @param login
      */
-    public void delete(String login) {
+    public void delete(String login) throws NotAccessException {
 
         // Здесь необходимо сделать доработку метод
-
+        try {
             userRepository.deleteByLogin(login);
-
-        // Здесь необходимо сделать доработку метода
-
+        } catch (UnsupportedOperationException e) {
+            throw new NotAccessException("Недостаточно прав для выполнения операции");
+        }
     }
 
 }
