@@ -38,7 +38,7 @@ public class UserService implements IUserService {
         //
         // Здесь необходимо реализовать перечисленные выше проверки
         //
-        if (user.getLogin() == null || user.getLogin().equals("") || user.getPassword() == null || user.getPassword().equals("")) {
+        if (user.getLogin() == null || user.getLogin().isEmpty() || user.getPassword() == null || user.getPassword().isEmpty()) {
             throw new IllegalArgumentException("Ошибка в заполнении полей");
         } else if (userRepository.findByLogin(user.getLogin()) != null) {
             throw new UserAlreadyRegisteredException("Пользователь с логином " + user.getLogin() + " зарегистрирован");
