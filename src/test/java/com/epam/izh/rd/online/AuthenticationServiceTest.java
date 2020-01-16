@@ -5,6 +5,7 @@ import com.epam.izh.rd.online.repository.IUserRepository;
 import com.epam.izh.rd.online.repository.UserRepository;
 import com.epam.izh.rd.online.service.AuthenticationService;
 import com.epam.izh.rd.online.service.IAuthenticationService;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
